@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
-//import * as perfil_github_service from  "../../service/perfil_github_service";
 import "./style.css";
 import { PerfilGitHubDTO } from "../../model/perfil_github";
-import axios from "axios";
+import * as perfil_github_services from "../../service/perfil_github_service";
 
 export default function PageSearchPerfilGit(){
+
+    const myPerfil = "thailsonAlmeida"
    
     const [perfilGitHub, setPerfilGitHub] = useState<PerfilGitHubDTO>();
 
     useEffect(() => {
-        axios.get("https://api.github.com/users/thailsonAlmeida").then(response => {
-            console.log(response.data);
+        perfil_github_services.getPerfilGitHub(myPerfil).then(response => {
             setPerfilGitHub(response.data);
-        })
-
-        
+        }).catch(error => {
+            console.log(error.response.data);
+        });
     }, []);
-
-    
-
-    
 
     return (
         <>
@@ -32,27 +28,41 @@ export default function PageSearchPerfilGit(){
             </div>            
             <button>Encontrar</button>
         </section>
+
+        {
+            perfilGitHub ?
+            
+            <section className="containerBody mt30 customBodyGitPerfil">
+                <div className="imagem-perfil">
+                    <img src={perfilGitHub?.avatar_url} alt="" />
+                </div>
+                <div className="dados-perfil">
+                    <h3>Informações</h3>
+                    <div className="dados-card">
+                        <p><b>Perfil: </b>{perfilGitHub?.url}</p>
+                    </div>
+                    <div className="dados-card">
+                        <p><b>Seguidores: </b>{perfilGitHub?.followers}</p>
+                    </div>
+                    <div className="dados-card">
+                        <p><b>Localidade: </b>{perfilGitHub?.location}</p>
+                    </div>
+                    <div className="dados-card">
+                        <p><b>Nome: </b>{perfilGitHub?.name}</p>
+                    </div>
+                </div>
+            </section>
+
+            : 
+            
+            <section className="containerBody mt30">                
+                <div>
+                    <h2>Erro ao buscar usuário</h2>
+                </div>
+            </section>
+        }
         
-        <section className="containerBody mt30 customBodyGitPerfil">
-            <div className="imagem-perfil">
-                <img src={perfilGitHub?.avatar_url} alt="" />
-            </div>
-            <div className="dados-perfil">
-                <h3>Informações</h3>
-                <div className="dados-card">
-                    <p><b>Perfil: </b>{perfilGitHub?.url}</p>
-                </div>
-                <div className="dados-card">
-                    <p><b>Seguidores: </b>{perfilGitHub?.followers}</p>
-                </div>
-                <div className="dados-card">
-                    <p><b>Localidade: </b>{perfilGitHub?.location}</p>
-                </div>
-                <div className="dados-card">
-                    <p><b>Nome: </b>{perfilGitHub?.name}</p>
-                </div>
-            </div>
-        </section>
+        
         </>
     );
 }
