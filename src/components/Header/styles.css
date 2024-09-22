@@ -1,0 +1,15 @@
+header{
+    height: 62px;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-font-secondary);
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;   
+
+}
+header a {
+    color: var(--color-font-secondary);
+    margin-left: 20px;      
+    text-decoration: none;  
+}

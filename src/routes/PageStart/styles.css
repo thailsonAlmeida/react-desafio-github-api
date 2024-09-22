@@ -1,0 +1,30 @@
+h2 {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-font-tertiary);
+    margin-top: 10px;
+}
+
+button {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-font-secondary);
+    color: var(color-font-secondary);
+    width: 101px;
+    height: 40px;
+    border-radius: 4px;
+    border: none;
+    margin-top: 30px;    
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--color-font-tertiary);    
+}
