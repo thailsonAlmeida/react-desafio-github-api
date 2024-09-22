@@ -30,12 +30,13 @@ h2{
     font-weight: 500px;
 }
 
-.imagem-perfil{
-    background-color: red;
+img{
+    background-color: #ffffff;
     width: 247px;
     height: 247px;
     float: left;
     margin-right: 20px;
+    border-radius: 8px;
 }
 
 .dados-perfil{
