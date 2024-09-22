@@ -1,68 +1,74 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./style.css";
 import { PerfilGitHubDTO } from "../../model/perfil_github";
 import * as perfil_github_services from "../../service/perfil_github_service";
+import CardPerfilGitHub from "../../components/CardPerfilGitHub";
+import CardError from "../../components/CardError";
 
-export default function PageSearchPerfilGit(){
-
-    const myPerfil = "thailsonAlmeida"
+export default function PageSearchPerfilGit(){     
    
     const [perfilGitHub, setPerfilGitHub] = useState<PerfilGitHubDTO>();
+    const [myPerfil, setMyPerfil] = useState<string>("");
+    const [formData, setFormData] = useState<FormData>({
+        namePerfilRepo: '',
+    });
+  
+    useEffect(() => { 
+        if(myPerfil != ""){
+            perfil_github_services.getPerfilGitHub(myPerfil).then(response => {
+                setPerfilGitHub(response.data);
+            }).catch(error => {
+                console.log(error.response.data);
+            }); 
+        }
+    }, [myPerfil]);
 
-    useEffect(() => {
-        perfil_github_services.getPerfilGitHub(myPerfil).then(response => {
-            setPerfilGitHub(response.data);
-        }).catch(error => {
-            console.log(error.response.data);
-        });
-    }, []);
+    type FormData = {
+        namePerfilRepo: string,
+    }
+
+    function handleNamePerfilRepo(event : any){
+        setFormData({...formData, namePerfilRepo: event.target.value});
+    }
+
+    function handleFormSubmit(event : any){
+        event.preventDefault();
+        setMyPerfil(formData.namePerfilRepo);
+    }
 
     return (
         <>
         <section className="containerBody mt30 customBodyGitSearch">
             <h2>Encontre um perfil Github</h2>
             <div className="mt30"> 
-                <form action="">
-                    <input type="text" placeholder="Usuário Github" />
+                <form onSubmit={handleFormSubmit}>                    
+                    <div>
+                        <input 
+                            name="namePerfilRepo"
+                            type="text" 
+                            placeholder="Usuário Github" 
+                            value={formData.namePerfilRepo}
+                            onChange={handleNamePerfilRepo}
+                        />
+                    </div>
+                    <button type="submit">Encontrar</button>
                 </form> 
             </div>            
-            <button>Encontrar</button>
+            
         </section>
 
         {
-            perfilGitHub ?
-            
-            <section className="containerBody mt30 customBodyGitPerfil">
-                <div className="imagem-perfil">
-                    <img src={perfilGitHub?.avatar_url} alt="" />
-                </div>
-                <div className="dados-perfil">
-                    <h3>Informações</h3>
-                    <div className="dados-card">
-                        <p><b>Perfil: </b>{perfilGitHub?.url}</p>
-                    </div>
-                    <div className="dados-card">
-                        <p><b>Seguidores: </b>{perfilGitHub?.followers}</p>
-                    </div>
-                    <div className="dados-card">
-                        <p><b>Localidade: </b>{perfilGitHub?.location}</p>
-                    </div>
-                    <div className="dados-card">
-                        <p><b>Nome: </b>{perfilGitHub?.name}</p>
-                    </div>
-                </div>
-            </section>
+            perfilGitHub ?           
+            <CardPerfilGitHub perfil={perfilGitHub} />
 
-            : 
-            
-            <section className="containerBody mt30">                
-                <div>
-                    <h2>Erro ao buscar usuário</h2>
-                </div>
-            </section>
+            :             
+                myPerfil === "" 
+                ?
+                    <div></div>
+                :
+                    <CardError/>
         }
-        
-        
         </>
     );
 }
